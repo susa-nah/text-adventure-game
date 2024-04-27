@@ -15,13 +15,27 @@ public class Room {
     private String description;
     private ArrayList<Item> visibleObjects;
     private ArrayList<Item> hiddenObjects;
+    private boolean locked;
     
     public Room(String name, String description) {
         this.name = name;
         this.description = description;
-        visibleObjects = new ArrayList<>();
-        hiddenObjects = new ArrayList<>();
+        this.visibleObjects = new ArrayList<>();
+        this.hiddenObjects = new ArrayList<>();
+        this.locked = false;
     }
+    
+    public Room(String name, String description, boolean locked) {
+        this.name = name;
+        this.description = description;
+        this.visibleObjects = new ArrayList<>();
+        this.hiddenObjects = new ArrayList<>();
+        this.locked = locked;
+    }
+    
+    /*
+    Identity methods.
+    */
     
     public String getName() {
         return name;
@@ -30,6 +44,10 @@ public class Room {
     public String getDescription() {
         return description;
     }
+    
+    /*
+    Inventory management methods
+    */
     
     public void addVisibleObject(Item item) {
         visibleObjects.add(item);
@@ -61,6 +79,54 @@ public class Room {
             hiddenObjects.remove(item);
             visibleObjects.add(item);
         }
+    }
+    
+    public boolean contains(Item item) {
+        if (hiddenObjects.contains(item) || visibleObjects.contains(item)) {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean isHidden(Item item) {
+        if (hiddenObjects.contains(item)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean isVisible(Item item) {
+        if (visibleObjects.contains(item)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean removeObject(Item item) {
+        if (visibleObjects.contains(item) && item.isCollectable()) {
+            visibleObjects.remove(item);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /*
+    Lock roome methods.
+    */
+    
+    public boolean isLocked() {
+        return locked;
+    }
+    
+    public void lock() {
+        this.locked = true;
+    }
+    
+    public void unlock() {
+        this.locked = false;
     }
 
     @Override

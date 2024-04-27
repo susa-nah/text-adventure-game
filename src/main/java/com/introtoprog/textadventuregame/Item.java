@@ -29,12 +29,16 @@ public class Item {
         return description;
     }
     
-    public boolean getCollectable() {
+    public boolean isCollectable() {
         return collectable;
     }
     
     public void examine() {
         System.out.println(description);
+    }
+    
+    public void setDescription(String info) {
+        this.description = info;
     }
 
     @Override

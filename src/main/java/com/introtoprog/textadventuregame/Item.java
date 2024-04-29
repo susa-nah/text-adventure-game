@@ -86,4 +86,9 @@ public class Item {
         }
         return Objects.equals(this.description, other.description);
     }
+    
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -13,12 +13,28 @@ import java.util.Objects;
 public class Item {
     protected String name;
     protected String description;
+    protected boolean highlight;
     protected boolean collectable;
+    
+    public Item(String name, String description, boolean collectable, boolean highlight) {
+        this.name = name;
+        this.description = description;
+        this.collectable = collectable;
+        this.highlight = highlight;
+    }
     
     public Item(String name, String description, boolean collectable) {
         this.name = name;
         this.description = description;
         this.collectable = collectable;
+        this.highlight = false;
+    }
+    
+    public Item(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.collectable = false;
+        this.highlight = false;
     }
     
     public String getName() {

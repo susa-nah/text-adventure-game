@@ -9,8 +9,7 @@ package com.introtoprog.textadventuregame;
  * @author susan
  */
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+
 public class Map {
     /*
     Contains methods for initalising the game map, placing rooms, 
@@ -26,30 +25,27 @@ public class Map {
     
     public Map() {
         this.rooms = new ArrayList<>();
+        // Create grid.
         this.grid = new ArrayList<>();
-    }
-    
-    public ArrayList getRooms() {
-        return rooms;
-    }
-    
-    public ArrayList<ArrayList<Integer>> getGrid() {
-        return this.grid;
-    }
-    
-    public void setGrid() {
         // Create ArrayList row filled with -1.
         ArrayList<Integer> row = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             row.add(-1);
         }
-        
         // Add new ArrayList for each row.
         for (int i = 0; i < 5; i++) {
             ArrayList<Integer> toAdd = new ArrayList<>();
             toAdd.addAll(row);
             grid.add(toAdd);
         }
+    }
+    
+    public ArrayList<Room> getRooms() {
+        return rooms;
+    }
+    
+    public ArrayList<ArrayList<Integer>> getGrid() {
+        return this.grid;
     }
     
     public void placeRoom(Room room, int row, int col) {

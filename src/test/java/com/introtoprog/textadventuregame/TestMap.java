@@ -39,10 +39,7 @@ public class TestMap {
     // create Map.
     private  Map gameMap = new Map();
     
-    @BeforeEach
-    public void setGrid() {
-        gameMap.setGrid();
-    }
+
     
     @BeforeEach
     public void setUpStreams() {

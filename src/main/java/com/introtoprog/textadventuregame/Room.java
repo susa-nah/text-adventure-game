@@ -143,6 +143,11 @@ public class Room {
     public void unlock() {
         this.locked = false;
     }
+    
+    @Override
+    public String toString() {
+        return name + "\n" + description + "\nDirections: " + navNSEW.toString();
+    }
 
     @Override
     public int hashCode() {

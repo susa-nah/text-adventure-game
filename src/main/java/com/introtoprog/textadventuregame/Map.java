@@ -17,10 +17,24 @@ public class Map {
     */
     private ArrayList<Room> rooms;
     private ArrayList<ArrayList<Integer>> grid;
+    private Room currentRoom; // Need to implement this.
     
     public Map(ArrayList<Room> rooms) {
         this.rooms = rooms;
+        // Create grid.
         this.grid = new ArrayList<>();
+        // Create ArrayList row filled with -1.
+        ArrayList<Integer> row = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            row.add(-1);
+        }
+        // Add new ArrayList for each row.
+        for (int i = 0; i < 5; i++) {
+            ArrayList<Integer> toAdd = new ArrayList<>();
+            toAdd.addAll(row);
+            grid.add(toAdd);
+        }
+        this.currentRoom = new Room("Limbo", "An ominous blank space before Story initialisation.");
     }
     
     public Map() {
@@ -38,6 +52,11 @@ public class Map {
             toAdd.addAll(row);
             grid.add(toAdd);
         }
+        this.currentRoom = new Room("Limbo", "An ominous blank space before Story initialisation.");
+    }
+    
+    public void setCurrentRoom(Room room) {
+        currentRoom = room;
     }
     
     public ArrayList<Room> getRooms() {

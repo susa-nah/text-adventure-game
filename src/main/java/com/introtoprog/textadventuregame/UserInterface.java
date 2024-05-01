@@ -9,11 +9,18 @@ package com.introtoprog.textadventuregame;
  * @author susan
  */
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Collections;
 public class UserInterface {
     private Scanner in;
+    private ArrayList<String> validCommands;
     
     public UserInterface() {
-        in = new Scanner(System.in);
+        this.in = new Scanner(System.in);
+        this.validCommands = new ArrayList<String>();
+        Collections.addAll(validCommands, "EXAMINE", "LOOK", "LOOK INSIDE", 
+                "GET","DROP","TALK","NORTH","SOUTH","EAST","WEST","HELP");
+        Collections.sort(validCommands);
     }
     
     /*
@@ -137,6 +144,23 @@ public class UserInterface {
         }
         
         return input;
-        
+    }
+    
+    public boolean isValidCommand(String command) {
+        return validCommands.contains(command);
+    }
+    
+    public void helpMenu() {
+        System.out.println("This game is designed to recieve input in the form 'VERB' 'NOUN'. "
+                + "Common commands include LOOK, EXAMINE, GET, DROP, LOOK, TALK, as well as the cardinal directions. "
+                + "Other commands may be possible within a specific context. Pay attention to the text for clues.");
+    }
+    
+    public void lookAction(Room room) {
+        System.out.println(room);
+    }
+    
+    public void lookAction(Item item) {
+        System.out.println(item.getDescription());
     }
 }

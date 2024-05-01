@@ -4,8 +4,12 @@
  */
 package com.introtoprog.textadventuregame;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -14,8 +18,39 @@ import org.junit.jupiter.params.provider.CsvSource;
  * @author susan
  */
 public class TestUserInterface {
+    // Setup print tests
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
+    private final PrintStream originalErr = System.err;
+    private final Map map = new Map();
+    private final Room testRoom = new Room("Limbo", "An ominous blank space before Story initialisation.");;
+    private final Room secondRoom = new Room("Bedroom", "A spacious bedroom with a fluffy bed.");
+    private final Item key = new Item("Key", "A small silver key.", true);
+    private String nl = System.lineSeparator();
+    
+        @BeforeEach
+    public void setUpStreams() {
+        System.setOut(new PrintStream(outContent));
+        System.setErr(new PrintStream(errContent));
+        map.placeRoom(testRoom, 2, 3);
+        map.placeRoom(secondRoom, 3, 3);
+        map.setRoomNavigation(testRoom);
+        map.setRoomNavigation(secondRoom);
+    }
+    
+    @AfterEach
+    public void restoreStreams() {
+        System.setOut(originalOut);
+        System.setErr(originalErr);
+    }
+    
+    // Create test class
     UserInterface ui = new UserInterface();
     
+    /*
+    Test command parsing
+    */
     @ParameterizedTest
     @CsvSource({"Look inside barrel,11", 
         "Examine inside barrel,7", 
@@ -70,6 +105,45 @@ public class TestUserInterface {
     void testParseObject(String input, String expected) {
         String output = ui.parseObject(input);
         assertEquals(expected, output);
+    }
+    
+    @ParameterizedTest
+    @CsvSource({"LOOK INSIDE,true", 
+        "EXAMINE,true", 
+        "INSIDE,false", 
+        "GO,false",
+        "EAST,true",
+        "WEST,true",
+        "SOUTH,true",
+        "FIND,false",
+        "LOOK,true",
+        ",false",
+        " ,false",
+        "XYZ,false",
+        "HELP,true",
+        "x white shirt,false",})
+    void testIsValidCommand(String input, String expected) {
+        boolean outcome = ui.isValidCommand(input);
+        assertEquals(expected, String.valueOf(outcome));
+    }
+    
+    /*
+    Test simple return objects.
+    */
+    @Test
+    void testLookAtRoom(){
+        ui.lookAction(testRoom);
+        String expected = "Limbo\n"
+                + "An ominous blank space before Story initialisation.\n"
+                + "Directions: South"+nl;
+        assertEquals(expected, outContent.toString());
+    }
+    
+    @Test
+    void testLookAtItem(){
+        ui.lookAction(key);
+        String expected = "A small silver key."+nl;
+        assertEquals(expected, outContent.toString());
     }
     
 }

@@ -13,7 +13,6 @@ import java.util.Objects;
 public class Room {
     private String name;
     private String description;
-    private Navigation navNSEW;
     private ArrayList<Item> visibleObjects;
     private ArrayList<Item> hiddenObjects;
     private boolean locked;
@@ -21,7 +20,6 @@ public class Room {
     public Room(String name, String description, boolean locked) {
         this.name = name;
         this.description = description;
-        this.navNSEW = new Navigation();
         this.visibleObjects = new ArrayList<>();
         this.hiddenObjects = new ArrayList<>();
         this.locked = locked;
@@ -30,7 +28,6 @@ public class Room {
     public Room(String name, String description) {
         this.name = name;
         this.description = description;
-        this.navNSEW = new Navigation();
         this.visibleObjects = new ArrayList<>();
         this.hiddenObjects = new ArrayList<>();
         this.locked = false;
@@ -46,18 +43,6 @@ public class Room {
     
     public String getDescription() {
         return description;
-    }
-    
-    /*
-    Navigation methods.
-    */
-    
-    public int[] getNavigation() {
-        return navNSEW.getNavigation();
-    }
-    
-    public void setNavigation(int north, int south, int east, int west) {
-        this.navNSEW.setNavigation(north, south, east, west);
     }
     
     /*
@@ -146,7 +131,7 @@ public class Room {
     
     @Override
     public String toString() {
-        return name + "\n" + description + "\nDirections: " + navNSEW.toString();
+        return name + "\n" + description;
     }
 
     @Override

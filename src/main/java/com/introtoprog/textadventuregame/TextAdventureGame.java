@@ -8,9 +8,12 @@ package com.introtoprog.textadventuregame;
  *
  * @author susan
  */
+import java.util.ArrayList;
 public class TextAdventureGame {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        StoryFactory story = new StoryFactory();
+        
+        story.buildStory();
     }
 }

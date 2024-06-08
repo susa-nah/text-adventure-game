@@ -4,111 +4,98 @@
  */
 package com.introtoprog.textadventuregame;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  *
  * @author susan
  */
 public class TestMap {
-    
-    /*
-    Setup test data
-    */
-    private Room bath = new Room("Bath", "A digny bathroom.");
-    private Room bedroom = new Room("Bedroom", "A small bedroom with a double bed and dresser.");
-    private Room closet = new Room("Closet", "A small closet.", true);
-    private Room hall = new Room("Hallway", "A long and narrow corridoor.");
-    private Room living = new Room("Living room", "A dimly lit living room with a broken television, couch, and table.");
-    private Room porch = new Room("Porch", "A narrow rectangle of concrete wrapped in cast iron.");
-    
-    private String newline = System.lineSeparator();
-    // output data
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
-    private final PrintStream originalErr = System.err;
-    
     // create Map.
-    private  Map gameMap = new Map();
-    
-
+    private  Map map = new Map("Up","Down","Right","Left");
     
     @BeforeEach
-    public void setUpStreams() {
-        System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errContent));
+    void setupMap() {
+    	map.setRoom(new Room("1", "Description of place 1"), 1);
+		map.setRoom(new Room("2", "Description of place 2"), 2);
+		map.setRoom(new Room("3", "Description of place 3"), 3);
+		map.setRoom(new Room("7", "Description of place 7"), 7);
+		map.setRoom(new Room("8", "Description of place 8"), 8);
+		map.setRoom(new Room("11", "Description of place 11"), 11);
+		map.setRoom(new Room("12", "Description of place 12"), 12);
+		map.setRoom(new Room("17", "Description of place 17"), 17);
+		map.setRoom(new Room("18", "Description of place 18"), 18);
+		map.setRoom(new Room("19", "Description of place 19"), 19);
+		map.setRoom(new Room("21", "Description of place 21"), 21);
+		map.setRoom(new Room("22", "Description of place 22"), 22);
+
+		map.setCurrentRoom(1);
+    }
+
+    
+    /*
+    test test map process
+    */
+    @ParameterizedTest
+    @CsvSource({"0,true", 
+        "25,false", 
+        "-3,false", 
+        "26,false",
+        "8,true"})
+    void testIsValidIndex(int x, boolean expected) {
+        boolean result = map.isValidIndex(x);
+        assertEquals(expected, result);
     }
     
-    @AfterEach
-    public void restoreStreams() {
-        System.setOut(originalOut);
-        System.setErr(originalErr);
+    @ParameterizedTest
+    @CsvSource({"0,0,0", 
+        "24,4,4", 
+        "-3,-1,-1", 
+        "12,2,2",
+        "8,1,3"})
+    void testGetCoordinates(int x, int e1, int e2) {
+        int[] expected = new int[]{e1, e2};
+        int[] outcome = map.getCoords(x);
+        assertTrue(Arrays.equals(expected, outcome));
     }
     
-    // Set grid
-    @Test
-    void testSetGridIsNegative() {
-        gameMap.printGrid();
-        String expected = "[-1, -1, -1, -1, -1]" + newline 
-                + "[-1, -1, -1, -1, -1]" + newline + "[-1, -1, -1, -1, -1]" + newline 
-                + "[-1, -1, -1, -1, -1]" + newline + "[-1, -1, -1, -1, -1]" + newline;
-        assertEquals(expected, outContent.toString(),"Grid should print 5 arrays of -1.");
+    @ParameterizedTest
+    @CsvSource({"0,N,-1",
+        "0,S,-1", //empty room case
+        "24,N,19",
+        "24,E,-1",
+        "16,E,17", 
+        "16,S,21",
+        "15,W,-1",
+        "14,E,-1"})
+    void testGetDirectionIndex(int current, char direction, int expected) {
+        int outcome = map.getDirectionIndex(current, direction);
+        assertEquals(expected, outcome);
     }
     
-    // place room
-    @Test
-    void testAddRoomsToGrid() {
-        gameMap.placeRoom(bath, 1, 3); // index 0
-        gameMap.placeRoom(bedroom, 1, 2); // index 1
-        gameMap.placeRoom(closet, 2, 3); // index 2
-        gameMap.placeRoom(hall, 1, 1); // index 3
-        gameMap.placeRoom(living, 2, 1); // index 4
-        gameMap.placeRoom(porch, 0, 2); // index 5
-        gameMap.printGrid();
-        String expected = "[-1, -1, 5, -1, -1]" + newline 
-                + "[-1, 3, 1, 0, -1]" + newline + "[-1, 4, -1, 2, -1]" + newline 
-                + "[-1, -1, -1, -1, -1]" + newline + "[-1, -1, -1, -1, -1]" + newline;
-        assertEquals(expected, outContent.toString(),"Failed to correctly place rooms in grid.");
-    }
-    
-    @Test
-    void testGetRoomIndexFromCoord() {
-        gameMap.placeRoom(bath, 1, 3); // index 0
-        gameMap.placeRoom(bedroom, 1, 2); // index 1
-        gameMap.placeRoom(closet, 2, 3); // index 2
-        gameMap.placeRoom(hall, 1, 1); // index 3
-        gameMap.placeRoom(living, 2, 1); // index 4
-        gameMap.placeRoom(porch, 0, 2); // index 5
-        int index = gameMap.getRoomIndexAt(2, 3);
-        assertEquals(2, index, "Room index should be retrieved by coordinates.");
-    }
-    
-    // set room navigation
-    @Test
-    void testSetRoomNavigation() {
-        // Set rooms
-        gameMap.placeRoom(bath, 1, 3); // index 0
-        gameMap.placeRoom(bedroom, 1, 2); // index 1
-        gameMap.placeRoom(closet, 2, 3); // index 2
-        gameMap.placeRoom(hall, 1, 1); // index 3
-        gameMap.placeRoom(living, 2, 1); // index 4
-        gameMap.placeRoom(porch, 0, 2); // index 5
-        // Get room list
-        ArrayList<Room> rooms = gameMap.getRooms();
-        // Set navigation for closet.
-        gameMap.setRoomNavigation(closet);
-        gameMap.setRoomNavigation(bedroom);
-        String expected = "[0, -1, -1, -1]";
-        String expectedBed = "[5, -1, 0, 3]";
-        assertEquals(expected, Arrays.toString(closet.getNavigation()));
-        assertEquals(expectedBed, Arrays.toString(bedroom.getNavigation()));
+    @ParameterizedTest
+    @CsvSource({"0,Right",
+    	"-1,",
+        "1,Right",
+        "2,Down Right Left",
+        "7,Up Down Right",
+        "19,Left", 
+        "18, Right Left",
+        "12,Up Down Left",
+        "22, Up Left"})
+    void testGetDirections(int currentIndex, String expected) {
+    	if (expected == null) {
+    		
+    	} else if (expected.contains(" ")) {
+    		String[] parts = expected.split(" ");
+    		expected = String.join(", ", parts);
+    	}
+    	
+    	String outcome = map.getDirections(currentIndex);
+    	assertEquals(expected, outcome);
     }
 }

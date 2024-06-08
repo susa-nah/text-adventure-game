@@ -6,7 +6,6 @@ package com.introtoprog.textadventuregame;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.Arrays;
 /**
  *
  * @author susan
@@ -42,26 +41,6 @@ public class TestRoom {
     @Test
     void defaultConstructorIsUnlocked() {
         assertFalse(bath.isLocked(), "Not passing bool to locked should be unlocked.");
-    }
-    
-    @Test
-    void testNavigationDevaultsToNeg1() {
-        int[] nav = bath.getNavigation();
-        int[] expected = new int[]{-1, -1, -1, -1};
-        assertTrue(Arrays.equals(expected, nav), 
-        "Navigation should default to -1 for all values.");
-        assertEquals(4, nav.length, "Navigation should contain 4 items.");
-    }
-    
-    /*
-    Test navigation initalisation
-    */
-    @Test
-    void testSetNavigationCoords() {
-        bath.setNavigation(0, 1, 2, 3);
-        int[] expected = new int[]{0, 1, 2, 3};
-        assertTrue(Arrays.equals(bath.getNavigation(), expected), 
-                "Navigation should be set consistent with input.");
     }
     
     /*

@@ -49,11 +49,11 @@ public class Room {
     Inventory management methods
     */
     
-    public void addVisibleObject(Item item) {
+    public void addObject(Item item) {
         visibleObjects.add(item);
     }
     
-    public ArrayList getVisibleObjects() {
+    public ArrayList getObjects() {
         return visibleObjects;
     }
     
@@ -82,26 +82,24 @@ public class Room {
     }
     
     public boolean contains(Item item) {
-        if (hiddenObjects.contains(item) || visibleObjects.contains(item)) {
-            return true;
+        return hiddenObjects.contains(item) || visibleObjects.contains(item);
+    }
+    
+    public boolean hasObjectNamed(String name) {
+        for (Item item: visibleObjects) {
+            if (item.getName().contains(name)) {
+                return true;
+            }
         }
         return false;
     }
     
     public boolean isHidden(Item item) {
-        if (hiddenObjects.contains(item)) {
-            return true;
-        } else {
-            return false;
-        }
+        return hiddenObjects.contains(item);
     }
     
     public boolean isVisible(Item item) {
-        if (visibleObjects.contains(item)) {
-            return true;
-        } else {
-            return false;
-        }
+        return visibleObjects.contains(item);
     }
     
     public boolean removeObject(Item item) {
